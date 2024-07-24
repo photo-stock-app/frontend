@@ -1,0 +1,13 @@
+services:
+  frontend-nginx:
+    restart: always
+    environment:
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: .conf
+      APP_PORT: ${APP_PORT}
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./
+          target: /etc/nginx

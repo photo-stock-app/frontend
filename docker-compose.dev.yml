@@ -1,0 +1,16 @@
+name: frontend-dev
+
+services:
+  photo-stock-frontend:
+    build:
+      context: .
+      dockerfile: ./.docker/Dockerfile.dev
+    container_name: frontend-nuxt
+    image: photo-stock-frontend:dev
+    command: npm run dev
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    volumes:
+      - .:/app
+      - /app/node_modules

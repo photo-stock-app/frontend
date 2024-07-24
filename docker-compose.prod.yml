@@ -1,0 +1,21 @@
+name: frontend-dev
+
+services:
+  frontend-nginx:
+    extends:
+      service: frontend-nginx
+      file: .docker/nginx/service.yml
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+    image: alonecat/photo-stock-nginx:latest
+  frontend-nuxt:
+    extends:
+      service: frontend-nuxt
+      file: .docker/nginx/service.yml
+    build:
+      context: .
+      dockerfile: .docker/nuxt/Dockerfile
+    image: alonecat/photo-stock-frontend:latest
+    ports:
+      - "${APP_PORT}:${APP_PORT}"

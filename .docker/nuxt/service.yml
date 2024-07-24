@@ -1,0 +1,6 @@
+services:
+  frontend-nuxt:
+    restart: always
+    environment:
+      APP_PORT: ${APP_PORT}
+      GRAPHQL_URL: ${GRAPQHL_URL}
