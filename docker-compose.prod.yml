@@ -12,7 +12,7 @@ services:
   frontend-nuxt:
     extends:
       service: frontend-nuxt
-      file: .docker/nginx/service.yml
+      file: .docker/nuxt/service.yml
     build:
       context: .
       dockerfile: .docker/nuxt/Dockerfile
