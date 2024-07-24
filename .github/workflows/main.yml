@@ -15,7 +15,6 @@ jobs:
       - name: Create .env file
         env:
           GQL_HOST: "http://persons-web-1.local/wp/graphql"
-          APP_PORT: "4000"
         
         run: |
           touch .env
@@ -25,8 +24,8 @@ jobs:
 
       - name: Build and run Docker containers
         run: |
-          docker-compose -f docker-compose.prod.yml build
-          docker-compose -f docker-compose.prod.yml down --rmi local --remove-orphans
-          docker-compose -f docker-compose.prod.yml up -d
+          docker-compose build
+          docker-compose down --rmi local --remove-orphans
+          docker-compose up -d
 
           
