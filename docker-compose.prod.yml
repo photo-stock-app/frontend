@@ -17,5 +17,4 @@ services:
       context: .
       dockerfile: .docker/nuxt/Dockerfile
     image: alonecat/photo-stock-frontend:latest
-    ports:
-      - "${APP_PORT}:${APP_PORT}"
+
