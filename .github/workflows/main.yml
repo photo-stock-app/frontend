@@ -29,7 +29,7 @@ jobs:
           docker-compose -f docker-compose.prod.yml down --rmi local --remove-orphans
           docker-compose -f docker-compose.prod.yml up -d
 
-      - name: views logs
+      - name: view logs
         run: |
-          docker-compose logs -f photo-stock-frontend
+          docker-compose logs -f  docker-compose.prod.yml photo-stock-frontend
           
