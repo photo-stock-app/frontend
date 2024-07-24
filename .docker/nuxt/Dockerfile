@@ -1,4 +1,3 @@
-
 FROM node:18.12 as build
 
 WORKDIR /app
@@ -13,13 +12,10 @@ RUN npx nuxt build
 
 FROM node:18.12
 
-RUN adduser -D nuxtuser
-
-USER nuxtuser
 
 WORKDIR /app
 
-COPY --chown=nuxtuser:nuxtuser --from=build /app/.output .
+COPY --from=build /app/.output .
 
 EXPOSE 3000
 
