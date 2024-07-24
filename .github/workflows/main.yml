@@ -31,5 +31,5 @@ jobs:
 
       - name: view logs
         run: |
-          docker-compose logs -f  docker-compose.prod.yml photo-stock-frontend
+          docker-compose docker-compose.prod.yml logs -f photo-stock-frontend
           
