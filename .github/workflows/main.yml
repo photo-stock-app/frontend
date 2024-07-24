@@ -1,0 +1,33 @@
+name: 'Deploy Photo-Stock-Frontend'
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        env:
+          GQL_HOST: "http://persons-web-1.local/wp/graphql"
+        
+        run: |
+          touch .env
+          echo "GQL_HOST=\"$GQL_HOST\"" >> .env
+
+
+      - name: Build and run Docker containers
+        run: |
+          docker-compose build
+          docker-compose down --rmi local --remove-orphans
+          docker-compose up -d
+
+      - name: views logs
+        run: |
+          docker-compose logs -f photo-stock-frontend
+          
