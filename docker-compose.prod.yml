@@ -9,6 +9,8 @@ services:
       context: .
       dockerfile: .docker/nginx/Dockerfile
     image: alonecat/photo-stock-nginx:latest
+  depends_on:
+    - frontend-nuxt
   frontend-nuxt:
     extends:
       service: frontend-nuxt
@@ -17,4 +19,5 @@ services:
       context: .
       dockerfile: .docker/nuxt/Dockerfile
     image: alonecat/photo-stock-frontend:latest
+
 
