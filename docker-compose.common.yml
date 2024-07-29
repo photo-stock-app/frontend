@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    networks:
+      - nuxt-network
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      nuxt-app:
+        condition: service_started
+
+  nuxt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - nuxt-network
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      GRAPHQL_URL: ${GRAPHQL_URL}
+
+networks:
+  nuxt-network:
+    driver: bridge

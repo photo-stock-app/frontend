@@ -1,6 +1,0 @@
-services:
-  frontend-nuxt:
-    environment:
-      NODE_ENV: 'production'
-      GRAPHQL_URL: ${GRAPQHL_URL}
-

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: alonecat/photo-stock-nginx:latest
+    restart: always
+
+
+  nuxt-app:
+    image: alonecat/photo-stock-frontend:latest
+    restart: always
+    environment:
+      NODE_ENV: 'production'

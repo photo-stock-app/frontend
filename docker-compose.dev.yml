@@ -1,12 +1,19 @@
-name: frontend-dev
+version: '3.8'
 
 services:
-  photo-stock-frontend:
+  nginx:
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./
+          target: /etc/nginx
+
+  nuxt-app:
+    restart: unless-stopped
     build:
       context: .
-      dockerfile: ./.docker/Dockerfile.dev
-    container_name: frontend-nuxt
-    image: photo-stock-frontend:dev
+      dockerfile: Dockerfile.dev
     command: npm run dev
     ports:
       - "3000:3000"
@@ -14,3 +21,5 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    environment:
+      NODE_ENV: 'development'
