@@ -27,10 +27,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PAT }}
 
+      - name: Build and push nginx image
+        run: |
+          docker build -t alonecat/photo-stock-nginx:latest -f docker/nginx/Dockerfile .
+          docker push alonecat/photo-stock-nginx:latest
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: alonecat/photo-stock-frontend:latest
+      - name: Build and push nuxt-app image
+        run: |
+          docker build -t alonecat/photo-stock-frontend:latest -f docker/nuxt-app/Dockerfile .
+          docker push alonecat/photo-stock-frontend:latest
