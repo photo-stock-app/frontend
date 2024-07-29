@@ -1,5 +1,5 @@
 <template>
   <div>
-     test test test    !!!! rfr
+    New text
   </div>
 </template>
