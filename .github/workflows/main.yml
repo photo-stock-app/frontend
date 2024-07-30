@@ -43,10 +43,8 @@ jobs:
         if: steps.push_images.conclusion == 'success'
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd ${{ secrets.SSH_COMPOSE_DIR }}
-            echo "GQL_HOST=http://persons-web-1.local/wp/graphql" > .env
-            echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env
-            docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
-            docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
-            docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
+          cd ${{ secrets.SSH_COMPOSE_DIR }}
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
+          NODE_ENV=production GQL_HOST=http://persons-web-1.local/wp/graphql APP_PORT=${{ secrets.APP_PORT }} docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
           EOF

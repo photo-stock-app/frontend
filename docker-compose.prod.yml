@@ -5,7 +5,6 @@ services:
     image: alonecat/photo-stock-nginx:latest
     restart: always
 
-
   nuxt-app:
     image: alonecat/photo-stock-frontend:latest
     restart: always
