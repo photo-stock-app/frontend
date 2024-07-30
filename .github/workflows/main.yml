@@ -30,9 +30,10 @@ jobs:
       - name: Copy docker-compose files to remote server
         if: steps.push_images.conclusion == 'success'
         run: |
-          scp -o StrictHostKeyChecking=no docker-compose.prod.yml docker-compose.common.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_COMPOSE_DIR }}
-    
-
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          chmod 600 private_key
+          scp -o StrictHostKeyChecking=no -i private_key docker-compose.prod.yml docker-compose.common.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_COMPOSE_DIR }}
+          rm private_key
       - name: Deploy using ssh
         if: steps.push_images.conclusion == 'success'
         uses: appleboy/ssh-action@master
