@@ -26,6 +26,8 @@ jobs:
           docker push alonecat/photo-stock-nginx:latest
           docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
           docker push alonecat/photo-stock-frontend:latest
+      - name: List files for debug
+        run: ls -al
 
       - name: Deploy using ssh
         if: steps.push_images.conclusion == 'success'
