@@ -26,8 +26,12 @@ jobs:
           docker push alonecat/photo-stock-nginx:latest
           docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
           docker push alonecat/photo-stock-frontend:latest
-      - name: List files for debug
-        run: ls -al
+
+      - name: Copy docker-compose files to remote server
+        if: steps.push_images.conclusion == 'success'
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.prod.yml docker-compose.common.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_COMPOSE_DIR }}
+    
 
       - name: Deploy using ssh
         if: steps.push_images.conclusion == 'success'
