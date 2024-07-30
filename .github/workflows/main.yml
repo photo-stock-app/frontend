@@ -34,30 +34,19 @@ jobs:
           chmod 600 private_key
           scp -o StrictHostKeyChecking=no -i private_key docker-compose.prod.yml docker-compose.common.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_COMPOSE_DIR }}
           rm private_key
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy using ssh
         if: steps.push_images.conclusion == 'success'
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            mkdir -p ${{ secrets.SSH_COMPOSE_DIR }}
-            scp -o StrictHostKeyChecking=no docker-compose.prod.yml docker-compose.common.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_COMPOSE_DIR }}
-
-            # Ensure the directory is set
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd ${{ secrets.SSH_COMPOSE_DIR }}
-
-            # Create .env file
             echo "GQL_HOST=http://persons-web-1.local/wp/graphql" > .env
             echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env
-
-            # Stop and remove existing containers
             docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
-
-            # Pull the latest images
             docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
-
-            # Start the new containers
             docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
+          EOF
