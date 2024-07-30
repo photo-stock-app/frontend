@@ -36,3 +36,15 @@ jobs:
         run: |
           docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
           docker push alonecat/photo-stock-frontend:latest
+
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ~/users/alonecat
+            pwd
+        
