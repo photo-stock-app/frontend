@@ -33,16 +33,20 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
           chmod 600 private_key
           
-          # Create a Docker context for the remote server
+          # Убедитесь, что переменные окружения установлены правильно
+          echo "SSH User: ${{ secrets.SSH_USERNAME }}"
+          echo "SSH Host: ${{ secrets.SSH_HOST }}"
+          
+          # Создание Docker контекста для удаленного сервера с явными переменными
           docker context create remote \
             --docker "host=ssh://$${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" \
             --description "Remote Docker server"
           
-          # List all contexts to verify
+          # Список всех контекстов для проверки
           docker context ls
           
-          # Use the created context
+          # Использование созданного контекста
           docker context use remote
           
-          # Verify current context
+          # Проверка текущего контекста
           docker context inspect
