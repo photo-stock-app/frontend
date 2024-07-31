@@ -27,24 +27,17 @@ jobs:
           docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
           docker push alonecat/photo-stock-frontend:latest
 
-      - name: Copy docker-compose files to remote server
+      - name: Deploy using Docker Compose Remote Action
         if: steps.push_images.conclusion == 'success'
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
-          chmod 600 private_key
-          scp -o StrictHostKeyChecking=no -i private_key docker-compose.prod.yml docker-compose.common.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_COMPOSE_DIR }}
-          rm private_key
-      - name: Set up SSH agent
-        uses: webfactory/ssh-agent@v0.5.4
+        uses: chaplyk/docker-compose-remote-action@v1.1
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy using ssh
-        if: steps.push_images.conclusion == 'success'
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd ${{ secrets.SSH_COMPOSE_DIR }}
-          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
-          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
-          NODE_ENV=production GQL_HOST=http://persons-web-1.local/wp/graphql APP_PORT=${{ secrets.APP_PORT }} docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
-          EOF
+          ssh_host: ${{ secrets.SSH_HOST }}
+          ssh_user: ${{ secrets.SSH_USERNAME }}
+          ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          compose_file: docker-compose.prod.yml:docker-compose.common.yml
+          pull: true
+          build: false # Assuming images are already built and pushed
+          environment: |
+            NODE_ENV=production
+            GQL_HOST=http://persons-web-1.local/wp/graphql
+            APP_PORT=${{ secrets.APP_PORT }}
