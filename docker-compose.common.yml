@@ -1,4 +1,4 @@
-name: frontend-common
+version: "3.3"
 
 services:
   nginx:
