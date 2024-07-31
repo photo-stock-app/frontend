@@ -27,26 +27,35 @@ jobs:
           docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
           docker push alonecat/photo-stock-frontend:latest
 
-      - name: Set up Docker context for remote server
+      - name: Debug SSH environment variables
         if: steps.push_images.conclusion == 'success'
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
-          chmod 600 private_key
-          
-          # Убедитесь, что переменные окружения установлены правильно
-          echo "SSH User: ${{ secrets.SSH_USERNAME }}"
-          echo "SSH Host: ${{ secrets.SSH_HOST }}"
-          
-          # Создание Docker контекста для удаленного сервера с явными переменными
+        echo "SSH User: ${{ secrets.SSH_USERNAME }}"
+        echo "SSH Host: ${{ secrets.SSH_HOST }}"
+        echo "SSH Private Key: ${SSH_PRIVATE_KEY:0:50}..." # Выводим только часть ключа для безопасности
+
+      - name: Create Docker context
+        if: steps.push_images.conclusion == 'success'
+        run: |
+          echo "Creating Docker context..."
           docker context create remote \
-            --docker "host=ssh://$${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" \
+            --docker "host=ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" \
             --description "Remote Docker server"
-          
-          # Список всех контекстов для проверки
           docker context ls
-          
-          # Использование созданного контекста
+          docker context inspect remote
+
+      - name: Use Docker context
+        if: steps.push_images.conclusion == 'success'
+        run: |
           docker context use remote
-          
-          # Проверка текущего контекста
-          docker context inspect
+          docker context ls
+          docker context inspect remote
+
+      - name: Run Docker Compose commands
+        if: steps.push_images.conclusion == 'success'
+        run: |
+          docker context use remote
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
+      
