@@ -50,6 +50,12 @@ jobs:
           docker context use remote
           docker context ls
           docker context inspect remote
+      - name: Display Docker Compose files
+        if: steps.push_images.conclusion == 'success'
+        run: |
+          cat docker-compose.prod.yml
+          cat docker-compose.common.yml
+
       - name: Debug Docker Compose files
         if: steps.push_images.conclusion == 'success'
         run: |
