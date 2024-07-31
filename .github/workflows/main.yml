@@ -50,6 +50,13 @@ jobs:
           docker context use remote
           docker context ls
           docker context inspect remote
+      - name: Debug Docker Compose files
+        if: steps.push_images.conclusion == 'success'
+        run: |
+          echo "Fetching Docker Compose files..."
+          docker context use remote
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml config
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml version
 
       - name: Run Docker Compose commands
         if: steps.push_images.conclusion == 'success'
