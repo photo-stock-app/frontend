@@ -27,17 +27,22 @@ jobs:
           docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
           docker push alonecat/photo-stock-frontend:latest
 
-      - name: Deploy using Docker Compose Remote Action
+      - name: Set up Docker context for remote server
         if: steps.push_images.conclusion == 'success'
-        uses: chaplyk/docker-compose-remote-action@v1.1
-        with:
-          ssh_host: ${{ secrets.SSH_HOST }}
-          ssh_user: ${{ secrets.SSH_USERNAME }}
-          ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          compose_file: docker-compose.prod.yml:docker-compose.common.yml
-          pull: true
-          build: false # Assuming images are already built and pushed
-          environment: |
-            NODE_ENV=production
-            GQL_HOST=http://persons-web-1.local/wp/graphql
-            APP_PORT=${{ secrets.APP_PORT }}
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          chmod 600 private_key
+          
+          docker context create remote \
+          --docker "host=ssh://$${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" \
+          --description "Remote Docker server"
+          
+          # Use the created context
+          docker context use remote
+
+      - name: Run Docker Compose commands remotely
+        if: steps.push_images.conclusion == 'success'
+        run: |
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
