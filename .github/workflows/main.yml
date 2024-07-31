@@ -47,14 +47,9 @@ jobs:
       - name: Use Docker context
         if: steps.push_images.conclusion == 'success'
         run: |
-          docker context use remote
-          docker context ls
-          docker context inspect remote
-      - name: Display Docker Compose files
-        if: steps.push_images.conclusion == 'success'
-        run: |
-          cat docker-compose.prod.yml
-          cat docker-compose.common.yml
+         # docker context use remote
+         # docker context ls
+
 
       - name: Debug Docker Compose files
         if: steps.push_images.conclusion == 'success'
