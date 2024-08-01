@@ -9,9 +9,12 @@ services:
       - "80:80"
     networks:
       - nuxt-network
-    depends_on:
-      nuxt-app:
-        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
 
   nuxt-app:
     image: alonecat/photo-stock-frontend:latest
