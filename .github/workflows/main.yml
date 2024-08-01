@@ -35,17 +35,17 @@ jobs:
           ssh-username: ${{ secrets.SSH_USERNAME }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Stop and remove existing services
-        id: remove_old_stack
-        if: steps.push_images.conclusion == 'success'
-        run: |
-          echo "Stopping and removing existing services..."
-          docker context use remote
-          docker stack rm my_stack
+     # - name: Stop and remove existing services
+      #  id: remove_old_stack
+      #  if: steps.push_images.conclusion == 'success'
+      #  run: |
+      #    echo "Stopping and removing existing services..."
+      #    docker context use remote
+       #   docker stack rm my_stack
           # Wait until services are removed
-          until [ -z "$(docker stack services my_stack 2>/dev/null)" ]; do
-            sleep 1
-          done
+       #   until [ -z "$(docker stack services my_stack 2>/dev/null)" ]; do
+       #     sleep 1
+       #   done
 
       - name: Deploy Docker stack
         if: steps.remove_old_stack.conclusion == 'success'
