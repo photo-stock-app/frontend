@@ -10,7 +10,8 @@ services:
     networks:
       - nuxt-network
     depends_on:
-      - nuxt-app
+      nuxt-app:
+        condition: service_healthy
 
   nuxt-app:
     image: alonecat/photo-stock-frontend:latest
@@ -25,6 +26,12 @@ services:
       GRAPHQL_URL: /run/secrets/graphql_url
     secrets:
       - graphql_url
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
 
 networks:
   nuxt-network:
