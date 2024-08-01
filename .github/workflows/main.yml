@@ -36,6 +36,7 @@ jobs:
 
       - name: Add SSH key to known_hosts
         run: |
+          mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Create Docker context
        # if: steps.push_images.conclusion == 'success'
