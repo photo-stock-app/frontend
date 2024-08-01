@@ -39,7 +39,10 @@ jobs:
         if: steps.push_images.conclusion == 'success'
         run: |
           docker context use remote
-          docker context ls
+
+      - name: Create Docker secret
+        run: |
+          echo ${{ secrets.GRAPHQL_URL }} | docker secret create graphql_url -
 
       - name: Stop and remove existing services
         if: steps.push_images.conclusion == 'success'
