@@ -18,6 +18,7 @@ services:
       - nuxt-network
     environment:
       NODE_ENV: production
+      GRAPHQL_URL: /run/secrets/graphql_url
     secrets:
       - graphql_url
 
