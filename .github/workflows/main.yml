@@ -27,17 +27,16 @@ jobs:
         #  docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
         #  docker push alonecat/photo-stock-frontend:latest
 
-      - name: Debug SSH environment variables
-        #if: steps.push_images.conclusion == 'success'
-        run: |
-          echo "SSH User: ${{ secrets.SSH_USERNAME }}"
-          echo "SSH Host: ${{ secrets.SSH_HOST }}"
-          echo "SSH Private Key: ${SSH_PRIVATE_KEY:0:50}..." # Выводим только часть ключа для безопасности
 
       - name: Add SSH key to known_hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
       - name: Test SSH connection with scp
         run: |
