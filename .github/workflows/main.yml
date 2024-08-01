@@ -36,6 +36,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Stop and remove existing services
+        id: remove_old_stack
         if: steps.push_images.conclusion == 'success'
         run: |
           echo "Stopping and removing existing services..."
@@ -47,7 +48,7 @@ jobs:
           done
 
       - name: Deploy Docker stack
-        if: steps.push_images.conclusion == 'success'
+        if: steps.remove_old_stack.conclusion == 'success'
         run: |
           echo "Deploying stack..."
           docker context use remote
