@@ -5,8 +5,5 @@ export default defineNuxtConfig({
     public: {
       graphqlUrl: process.env.GRAPHQL_URL || 'default_value'
     }
-  },
-  serverMiddleware: [
-    { path: '/api/testEnv', handler: '~/server/middleware/testEnv.ts' }
-  ]
+  }
 })
