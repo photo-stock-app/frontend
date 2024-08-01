@@ -1,17 +1,21 @@
-version: "3.3"
+version: "3.8"
 
 services:
   nginx:
     image: alonecat/photo-stock-nginx:latest
-    networks:
-      - nuxt-network
+    deploy:
+      replicas: 1
     ports:
       - "80:80"
+    networks:
+      - nuxt-network
     depends_on:
       - nuxt-app
 
   nuxt-app:
     image: alonecat/photo-stock-frontend:latest
+    deploy:
+      replicas: 1
     ports:
       - "3000:3000"
     networks:

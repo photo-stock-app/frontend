@@ -24,7 +24,8 @@ jobs:
         run: |
           docker build -t alonecat/photo-stock-nginx:latest -f nginx/Dockerfile ./nginx
           docker push alonecat/photo-stock-nginx:latest
-          docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile . --build-arg GRAPHQL_URL=${GRAPHQL_URL}
+          docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile . 
+          #--build-arg GRAPHQL_URL=${GRAPHQL_URL}
           docker push alonecat/photo-stock-frontend:latest
 
       - name: Set up docker context over SSH authentication
