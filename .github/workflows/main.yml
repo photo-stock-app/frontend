@@ -38,8 +38,9 @@ jobs:
       - name: Remove and create Docker secret
         run: |
           docker context use remote
-          docker secret rm graphql_url
           
+          docker secret rm graphql_url || true
+
           echo ${{ secrets.GRAPHQL_URL }} | docker secret create graphql_url -
 
       - name: Stop and remove existing services
