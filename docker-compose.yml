@@ -23,7 +23,7 @@ services:
 
 networks:
   nuxt-network:
-    driver: bridge
+    driver: overlay
 
 secrets:
   graphql_url:
