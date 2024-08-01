@@ -48,7 +48,7 @@ jobs:
        #   done
 
       - name: Deploy Docker stack
-        if: steps.remove_old_stack.conclusion == 'success'
+        #if: steps.remove_old_stack.conclusion == 'success'
         run: |
           echo "Deploying stack..."
           docker context use remote
