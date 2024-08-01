@@ -27,23 +27,17 @@ jobs:
         #  docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
         #  docker push alonecat/photo-stock-frontend:latest
 
-
-      - name: Add SSH key to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Setup SSH key
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Test SSH connection with scp
-        run: |
-            echo "This is a test file" > testfile.txt
-            scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} testfile.txt ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/tmp/
-            ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} ls /tmp/testfile.txt
-
+      - name: Test SSH connection and setup Docker context
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Testing SSH connection with scp..."
+            echo "This is a test file" > /tmp/testfile.txt
+            ls /tmp/testfile.txt
+            rm /tmp/testfile.txt
       - name: Create Docker context
        # if: steps.push_images.conclusion == 'success'
         run: |
