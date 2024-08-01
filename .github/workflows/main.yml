@@ -24,7 +24,7 @@ jobs:
         run: |
           docker build -t alonecat/photo-stock-nginx:latest -f nginx/Dockerfile ./nginx
           docker push alonecat/photo-stock-nginx:latest
-          docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
+          docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile . --build-arg GRAPHQL_URL=${GRAPHQL_URL}
           docker push alonecat/photo-stock-frontend:latest
 
       - name: Set up docker context over SSH authentication
@@ -34,12 +34,6 @@ jobs:
           ssh-host: ${{ secrets.SSH_HOST }}
           ssh-username: ${{ secrets.SSH_USERNAME }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Update Docker secret
-        if: steps.push_images.conclusion == 'success'
-        run: |
-          docker context use remote
-          echo ${{ secrets.GRAPHQL_URL }} | docker secret create graphql_url --replace
 
       - name: Stop and remove existing services
         if: steps.push_images.conclusion == 'success'
