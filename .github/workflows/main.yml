@@ -34,17 +34,8 @@ jobs:
           ssh-username: ${{ secrets.SSH_USERNAME }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Inspect docker context
-        if: steps.push_images.conclusion == 'success'
-        run: docker context ls -q
 
-      - name: Debug Docker Compose
-        if: steps.push_images.conclusion == 'success'
+      - name: Deploy using Docker Stack
         run: |
-          echo "Fetching Docker Compose files..."
-          docker context use remote
-          echo "Stopping and removing existing services..."
-          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
-          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml rm -f
-          echo "Starting services..."
-          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
+          echo "Deploying stack..."
+          docker stack deploy -c docker-compose.yml frontend_stack
