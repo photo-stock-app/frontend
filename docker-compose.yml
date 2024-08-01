@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  nuxt-app:
+    image: alonecat/photo-stock-frontend:latest
+    restart: always
+    environment:
+      NODE_ENV: 'production'
+    ports:
+      - "3000:3000"
+    networks:
+      - nuxt-network
+
+  nginx:
+    image: alonecat/photo-stock-nginx:latest
+    restart: always
+    depends_on:
+      - nuxt-app
+    ports:
+      - "80:80"
+    networks:
+      - nuxt-network
+
+networks:
+  nuxt-network:
+    driver: bridge
