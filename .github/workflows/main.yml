@@ -48,11 +48,11 @@ jobs:
           #docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml config
           #docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml version
 
-      - name: Run Docker Compose commands
+      #- name: Run Docker Compose commands
       #  if: steps.push_images.conclusion == 'success'
-        run: |
-          docker context use remote
-          docker-compose up
+      #  run: |
+      #    docker context use remote
+      #    docker-compose up
       #    docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
        #   docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
         #  docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
