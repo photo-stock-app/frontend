@@ -44,9 +44,9 @@ jobs:
           docker context ls
           docker context inspect remote
 
-      - name: Use Docker context
-        if: steps.push_images.conclusion == 'success'
-        run: |
+      #- name: Use Docker context
+      #  if: steps.push_images.conclusion == 'success'
+      #  run: |
          # docker context use remote
          # docker context ls
 
