@@ -27,24 +27,18 @@ jobs:
         #  docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
         #  docker push alonecat/photo-stock-frontend:latest
 
-      - name: Test SSH connection and setup Docker context
-        uses: appleboy/ssh-action@master
+      - name: Set up docker context over SSH authentication
+        uses: amirmarmul/docker-context-ssh-action@v1
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "Testing SSH connection with scp..."
-            echo "This is a test file" > /tmp/testfile.txt
-            ls /tmp/testfile.txt
-            rm /tmp/testfile.txt
-      - name: Create Docker context
-       # if: steps.push_images.conclusion == 'success'
-        run: |
-          echo "Creating Docker context..."
-          docker context create remote \
-            --docker "host=ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} --ssh-options='-o StrictHostKeyChecking=no'" \
-            --description "Remote vps Docker server"
+          ssh-host: ${{ secrets.SSH_HOST }}
+          ssh-username: ${{ secrets.SSH_USERNAME }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Убираем строку с ssh-passphrase если парольной фразы нет
+
+      - name: Inspect docker context
+        # if: steps.push_images.conclusion == 'success'
+        run: docker context ls -q
+
       - name: Debug Docker Compose files
         #if: steps.push_images.conclusion == 'success'
         run: |
