@@ -43,4 +43,8 @@ jobs:
         run: |
           echo "Fetching Docker Compose files..."
           docker context use remote
-          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up
+          echo "Stopping and removing existing services..."
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml rm -f
+          echo "Starting services..."
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
