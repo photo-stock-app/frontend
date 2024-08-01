@@ -44,9 +44,8 @@ jobs:
         run: |
           echo "Fetching Docker Compose files..."
           docker context use remote
-          docker-compose config
-          #docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml config
-          #docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml version
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml config
+          docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml version
 
       #- name: Run Docker Compose commands
       #  if: steps.push_images.conclusion == 'success'
