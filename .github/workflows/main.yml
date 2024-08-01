@@ -1,13 +1,11 @@
-name: Publish Docker image
+name: Deploy Docker stack
 
 on:
   push:
     branches: ['main']
 
 jobs:
-  push_to_registry:
-    name: Push Docker image to Docker Hub
-
+  deploy_stack:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,14 +17,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PAT }}
 
-      - name: Build and push images
-        id: push_images
-        run: |
-          docker build -t alonecat/photo-stock-nginx:latest -f nginx/Dockerfile ./nginx
-          docker push alonecat/photo-stock-nginx:latest
-          docker build -t alonecat/photo-stock-frontend:latest -f Dockerfile .
-          docker push alonecat/photo-stock-frontend:latest
-
       - name: Set up docker context over SSH authentication
         uses: amirmarmul/docker-context-ssh-action@v1
         with:
@@ -34,8 +24,11 @@ jobs:
           ssh-username: ${{ secrets.SSH_USERNAME }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-
-      - name: Deploy using Docker Stack
+      - name: Inspect docker context
         run: |
-          echo "Deploying stack..."
-          docker stack deploy -c docker-compose.yml frontend_stack
+          docker context ls -q
+          docker context use remote
+
+      - name: Deploy Docker stack
+        run: |
+          docker stack deploy -c docker-compose.yml my_stack
