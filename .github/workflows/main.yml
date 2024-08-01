@@ -42,7 +42,6 @@ jobs:
             --docker "host=ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" \
             --description "Remote Docker server"
           docker context ls
-          docker context inspect remote
 
       #- name: Use Docker context
       #  if: steps.push_images.conclusion == 'success'
@@ -55,16 +54,16 @@ jobs:
         #if: steps.push_images.conclusion == 'success'
         run: |
           echo "Fetching Docker Compose files..."
-          ls ./
           docker-compose config
           #docker context use remote
           #docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml config
           #docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml version
 
-      #- name: Run Docker Compose commands
+      - name: Run Docker Compose commands
       #  if: steps.push_images.conclusion == 'success'
-      #  run: |
-          #docker context use remote
+        run: |
+          docker context use remote
+          #docker-compose up
       #    docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml down
        #   docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml pull
         #  docker-compose -f docker-compose.prod.yml -f docker-compose.common.yml up -d
