@@ -35,13 +35,11 @@ jobs:
           ssh-username: ${{ secrets.SSH_USERNAME }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Inspect docker context
-        if: steps.push_images.conclusion == 'success'
+      - name: Remove and create Docker secret
         run: |
           docker context use remote
-
-      - name: Create Docker secret
-        run: |
+          docker secret rm graphql_url
+          
           echo ${{ secrets.GRAPHQL_URL }} | docker secret create graphql_url -
 
       - name: Stop and remove existing services
