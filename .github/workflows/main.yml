@@ -41,5 +41,9 @@ jobs:
         run: |
           echo "Deploying stack..."
           docker context use remote
-          docker stack rm photo-stock-front-stack || echo "Failed to remove stack"
+          docker stack rm photo-stock-front-stack
+          until [ "$(docker stack ls | grep photo-stock-front-stack)" == "" ]; do
+          echo "Waiting for stack to be removed..."
+          sleep 5
+          done
           docker stack deploy -c docker-compose.yml photo-stock-front-stack
