@@ -1,5 +1,4 @@
-name: "photo-stock-front-prod"
-
+version: "3.8"
 services:
   nginx:
     image: alonecat/photo-stock-nginx:latest
