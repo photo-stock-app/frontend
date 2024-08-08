@@ -41,5 +41,5 @@ jobs:
         run: |
           echo "Deploying stack..."
           docker context use remote
-          docker stack rm photo-stock-front-stack
+          docker stack rm photo-stock-front-stack || echo "Failed to remove stack"
           docker stack deploy -c docker-compose.yml photo-stock-front-stack
