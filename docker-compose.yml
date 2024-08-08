@@ -8,7 +8,7 @@ services:
     ports:
       - "80:80"
     networks:
-      - nuxt-network
+      - frontend-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
@@ -23,12 +23,11 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - nuxt-network
+      - frontend-network
     environment:
       NODE_ENV: production
-      GRAPHQL_URL: /run/secrets/graphql_url
-    secrets:
-      - graphql_url
+      GRAPHQL_URL: ${GRAPHQL_URL}
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
@@ -37,9 +36,8 @@ services:
       timeout: 10s
 
 networks:
-  nuxt-network:
+  frontend-network:
     driver: overlay
+    attachable: true
 
-secrets:
-  graphql_url:
-    external: true
+
