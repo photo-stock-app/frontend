@@ -7,5 +7,6 @@
 
 <script setup>
 const config = useRuntimeConfig();
-const graphqlUrl = config.public.graphqlUrl;
+const graphqlUrl = process.env.GRAPHQL_URL;
+
 </script>

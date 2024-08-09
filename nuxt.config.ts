@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      graphqlUrl: process.env.GRAPHQL_URL || 'default_value'
+      graphqlUrl: process.env.GRAPHQL_URL
     }
   }
 })
