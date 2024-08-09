@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-const config = useRuntimeConfig();
-const graphqlUrl = process.env.GRAPHQL_URL;
+const config = useRuntimeConfig()
+const graphqlUrl = config.graphqlUrl;
 
 </script>
