@@ -1,12 +1,13 @@
 <template>
   <div>
-    test 3443
-     {{ graphqlUrl }}
+    test:
+    <span v-if="graphqlUrl">{{ graphqlUrl }}</span>
+    <span v-else>Loading...</span>
   </div>
 </template>
 
 <script setup>
 const config = useRuntimeConfig()
-const graphqlUrl = config.graphqlUrl;
-
+const graphqlUrl = config.public.graphqlUrl;
+console.log(graphqlUrl)
 </script>
