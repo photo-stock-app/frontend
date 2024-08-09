@@ -41,12 +41,11 @@ jobs:
         run: |
           echo "Deploying stack..."
           docker context use remote
-          STACK_EXISTS=$(docker stack ls | grep photo-stock-front-stack || true)
+          STACK_EXISTS=$(docker stack ls | grep photo-stock-front-stack)
           if [ ! -z "$STACK_EXISTS" ]; then
           echo "Stack exists"
-          #docker stack rm photo-stock-front-stack
-          #sleep 10  # Добавляем задержку для корректного завершения удаления
           else
           echo "Stack does not exist"
           fi
-          docker stack deploy -c docker-compose.yml photo-stock-front-stack
+          docker stack deploy --prune -c docker-compose.yml photo-stock-front-stack
+
