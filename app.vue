@@ -7,7 +7,15 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
+
 const config = useRuntimeConfig()
-const graphqlUrl = config.public.graphqlUrl;
-console.log(graphqlUrl)
+let graphqlUrl = config.public.graphqlUrl
+
+onMounted(() => {
+  // Дополнительная проверка на случай, если значение не загрузилось
+  if (!graphqlUrl) {
+    graphqlUrl = config.public.graphqlUrl;
+  }
+})
 </script>
