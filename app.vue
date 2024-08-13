@@ -1,6 +1,9 @@
 <template>
   <div>
+
     test!!:e4r4
+
+
     <span v-if="graphqlUrl">{{ graphqlUrl }}</span>
     <span v-else>Loading...</span>
   </div>
