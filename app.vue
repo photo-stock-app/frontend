@@ -1,6 +1,6 @@
 <template>
   <div>
-    test:
+    test!!:
     <span v-if="graphqlUrl">{{ graphqlUrl }}</span>
     <span v-else>Loading...</span>
   </div>

@@ -1,4 +1,4 @@
-name: "phpto-stock-front-dev"
+name: "stock-front-dev"
 
 services:
   nginx:
