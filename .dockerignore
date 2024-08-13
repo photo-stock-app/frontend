@@ -1,0 +1,25 @@
+### NuxtJS template
+# Generated dirs
+dist
+.nuxt
+.nuxt-*
+.output
+.gen
+
+# Node dependencies
+node_modules
+
+# System files
+*.log
+
+.docker
+.idea
+.run
+dev
+
+.dockerignore
+docker-compose.dev.yml
+Dockerfile
+Dockerfile.dev
+Makefile
+

@@ -1,0 +1,35 @@
+name: "stock-front-dev"
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - frontend-network-dev
+    ports:
+      - "80:80"
+
+  nuxt-app:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: npm run dev
+    ports:
+      - "3000:3000"
+      - "24678:24678"  # For Vite server (if used)
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: 'development'
+    networks:
+      - frontend-network-dev
+
+networks:
+  frontend-network-dev:
+    driver: bridge

@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  nginx:
+    image: alonecat/photo-stock-nginx:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "80:80"
+    networks:
+      - frontend-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+  nuxt-app:
+    image: alonecat/photo-stock-frontend:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend-network
+    environment:
+      NODE_ENV: production
+      GRAPHQL_URL: ${GRAPHQL_URL}
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+networks:
+  frontend-network:
+    driver: overlay
+    attachable: true
+
+
